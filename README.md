@@ -44,7 +44,6 @@ A simple RESTful API for a Quiz Application built with FastAPI, SQLAlchemy, and 
    Open `database.py` and modify the `URL_DATABASE` variable:
    ```python
    # Format: postgresql://<username>:<password>@<host>:<port>/<database_name>
-   URL_DATABASE = "postgresql://postgres:root@localhost:5432/QuizApplicationYT"
    ```
    Ensure you create the database `QuizApplicationYT` in PostgreSQL before running the app, or update the name in the connection string.
 
