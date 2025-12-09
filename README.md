@@ -47,6 +47,24 @@ A simple RESTful API for a Quiz Application built with FastAPI, SQLAlchemy, and 
    ```
    Ensure you create the database `QuizApplicationYT` in PostgreSQL before running the app, or update the name in the connection string.
 
+## Docker Setup
+
+You can run the application using Docker and Docker Compose without installing dependencies manually.
+
+1. **Build and Run:**
+   ```bash
+   docker-compose up --build
+   ```
+
+2. **Access the App:**
+   The API will be accessible at [http://localhost:8000](http://localhost:8000).
+
+3. **Pull from Docker Hub:**
+   You can also pull the pre-built image:
+   ```bash
+   docker pull omar2204/fastapi:v1.1
+   ```
+
 ## Running the Application
 
 Start the development server with `uvicorn`:
