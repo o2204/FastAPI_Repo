@@ -3,15 +3,14 @@ from app.repositories.question_repository import QuestionRepository
 from app.schemas.question import QuestionBase
 
 class QuestionService:
+    def __init__(self, question_repository: QuestionRepository):
+        self.question_repository = question_repository
 
-    @staticmethod
-    def get_question(db: Session, question_id: int):
-        return QuestionRepository.get_question(db, question_id)
+    def get_question(self, question_id: int):
+        return self.question_repository.get_question(question_id)
 
-    @staticmethod
-    def create_question(db: Session, question: QuestionBase):
-        return QuestionRepository.create_question(db, question)
+    def create_question(self, question: QuestionBase):
+        return self.question_repository.create_question(question)
 
-    @staticmethod
-    def delete_question(db: Session, question_id: int):
-        return QuestionRepository.delete_question(db, question_id)
+    def delete_question(self, question_id: int):
+        return self.question_repository.delete_question(question_id)

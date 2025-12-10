@@ -1,96 +1,66 @@
 # FastAPI Quiz Application
 
-A simple RESTful API for a Quiz Application built with FastAPI, SQLAlchemy, and PostgreSQL.
+A robust, layered RESTful API for a Quiz Application built with **FastAPI**, **SQLAlchemy**, and **PostgreSQL**.
 
-## Features
+## Architecture
+This project follows a strict **5-Layer Architecture** to ensure separation of concerns and maintainability:
 
-- **Questions**: Create, read, and delete questions.
-- **Choices**: Create and read choices associated with questions.
-- **Database**: PostgreSQL integration for persistent data storage.
-- **ORM**: SQLAlchemy for database interactions.
+1.  **API Layer** (`app/api`): Handles HTTP routes and requests.
+2.  **Controller Layer** (`app/controllers`): Orchestrates business logic flow.
+3.  **Service Layer** (`app/services`): Contains core business logic.
+4.  **Repository Layer** (`app/repositories`): Manages data access and DB transactions.
+5.  **Client Layer** (`app/client`): Internal Python client/SDK for API interaction.
+
+Dependency Injection (DI) is used throughout using FastAPI's `Depends` system.
 
 ## Tech Stack
+-   **Framework**: [FastAPI](https://fastapi.tiangolo.com/)
+-   **Database**: [PostgreSQL](https://www.postgresql.org/)
+-   **ORM**: [SQLAlchemy](https://www.sqlalchemy.org/)
+-   **Containerization**: Docker & Docker Compose
 
-- **Framework**: [FastAPI](https://fastapi.tiangolo.com/)
-- **Database**: [PostgreSQL](https://www.postgresql.org/)
-- **ORM**: [SQLAlchemy](https://www.sqlalchemy.org/)
-- **Driver**: `psycopg2-binary`
+## Setup & configuration
 
-## Prerequisites
+### Prerequisites
+-   Docker Desktop
+-   Python 3.10+ (for local development)
 
-- Python 3.7+
-- PostgreSQL installed and running locally.
-
-## Installation & Setup
-
-1. **Clone the repository:**
-
-   ```bash
-   git clone <repository-url>
-   cd <repository-directory>
-   ```
-
-2. **Install dependencies:**
-
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. **Database Configuration:**
-   
-   > [!IMPORTANT]
-   > Update the database connection URL in `database.py` with your PostgreSQL credentials.
-   
-   Open `database.py` and modify the `URL_DATABASE` variable:
-   ```python
-   # Format: postgresql://<username>:<password>@<host>:<port>/<database_name>
-   ```
-   Ensure you create the database `QuizApplicationYT` in PostgreSQL before running the app, or update the name in the connection string.
-
-## Docker Setup
-
-You can run the application using Docker and Docker Compose without installing dependencies manually.
-
-1. **Build and Run:**
-   ```bash
-   docker-compose up --build
-   ```
-
-2. **Access the App:**
-   The API will be accessible at [http://localhost:8000](http://localhost:8000).
-
-3. **Pull from Docker Hub:**
-   You can also pull the pre-built image:
-   ```bash
-   docker pull omar2204/fastapi:v1.1
-   ```
+### Environment
+The application uses a `.env` file for configuration.
+> **Note**: The Database is configured to run on host port **5434** to avoid conflicts with local Postgres instances.
 
 ## Running the Application
 
-Start the development server with `uvicorn`:
+### 1. Start Database (Docker)
+```bash
+docker compose up -d
+```
+This starts the PostgreSQL container on port `5434`.
+
+### 2. Run API Application
+You can run the application locally using `uvicorn`:
 
 ```bash
-uvicorn main:app --reload
+uvicorn app.main:app --reload
 ```
+The API will be available at [http://127.0.0.1:8000](http://127.0.0.1:8000).
 
-The API will be available at `http://127.0.0.1:8000`.
+## API & Testing
 
-## API Endpoints
+### Interactive Documentation
+-   **Swagger UI**: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+-   **ReDoc**: [http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc)
 
-### Questions
+### Check Endpoints
+-   `GET /api/questions/{id}`
+-   `POST /api/questions/`
+-   `DELETE /api/questions/{id}`
 
-- `GET /questions/{question_id}` - Get a specific question.
-- `POST /questions/` - Create a new question with choices.
-- `DELETE /questions/{question_id}` - Delete a question.
+### using the Client SDK
+An internal python client is available in `app/client/api_client.py`:
+```python
+from app.client.api_client import APIClient
 
-### Choices
-
-- `GET /choices/{question_id}` - Get all choices for a specific question.
-- `POST /choices/` - Create a new choice for a question.
-
-## Interactive Documentation
-
-FastAPI provides automatic interactive API documentation. Once the app is running, visit:
-
-- **Swagger UI**: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
-- **ReDoc**: [http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc)
+client = APIClient(base_url="http://127.0.0.1:8000")
+client.create_question(...)
+```

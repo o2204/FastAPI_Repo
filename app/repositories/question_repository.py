@@ -3,17 +3,17 @@ from app.models.question import Questions, Choices
 from app.schemas.question import QuestionBase, ChoiceBase
 
 class QuestionRepository:
+    def __init__(self, db: Session):
+        self.db = db
 
-    @staticmethod
-    def get_question(db: Session, question_id: int):
-        return db.query(Questions).filter(Questions.id == question_id).first()
+    def get_question(self, question_id: int):
+        return self.db.query(Questions).filter(Questions.id == question_id).first()
 
-    @staticmethod
-    def create_question(db: Session, question: QuestionBase):
+    def create_question(self, question: QuestionBase):
         db_question = Questions(question_text=question.question_text)
-        db.add(db_question)
-        db.commit()
-        db.refresh(db_question)
+        self.db.add(db_question)
+        self.db.commit()
+        self.db.refresh(db_question)
 
         for choice in question.choices:
             db_choice = Choices(
@@ -21,16 +21,16 @@ class QuestionRepository:
                 is_correct=choice.is_correct,
                 question_id=db_question.id
             )
-            db.add(db_choice)
-
-        db.commit()
+            self.db.add(db_choice)
+        
+        self.db.commit()
+        self.db.refresh(db_question)
         return db_question
 
-    @staticmethod
-    def delete_question(db: Session, question_id: int):
-        question = QuestionRepository.get_question(db, question_id)
+    def delete_question(self, question_id: int):
+        question = self.get_question(question_id)
         if question:
-            db.delete(question)
-            db.commit()
+            self.db.delete(question)
+            self.db.commit()
             return True
         return False

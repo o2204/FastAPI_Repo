@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from app.core.database import Base, engine
-from app.controllers.question_controller import router as question_router
+from app.api.routes.questions import router as api_router
 
 app = FastAPI()
 
@@ -8,4 +8,4 @@ app = FastAPI()
 Base.metadata.create_all(bind=engine)
 
 # Register routers
-app.include_router(question_router, prefix="/questions", tags=["Questions"])
+app.include_router(api_router, prefix="/api", tags=["Questions"])
